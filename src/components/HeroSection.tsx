@@ -95,11 +95,16 @@ export const HeroSection = () => {
 
             <div className="bg-card rounded-3xl overflow-hidden shadow-strong border-2 border-border relative">
               {/* Hero Image */}
-              <div className="relative h-48 overflow-hidden">
+              <div className="relative h-44 sm:h-52 md:h-60 overflow-hidden">
                 <img 
                   src={heroImage} 
                   alt="Étudiants africains collaborant" 
                   className="w-full h-full object-cover"
+                  style={{ objectPosition: "center 30%" }}
+                  onError={(e) => {
+                    e.currentTarget.src = "/placeholder.svg";
+                    e.currentTarget.className = "w-full h-full object-contain p-8 opacity-50";
+                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent" />
               </div>
