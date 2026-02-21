@@ -1,4 +1,4 @@
-import { ArrowUp, Linkedin, Heart } from "lucide-react";
+import { ArrowUp, Linkedin } from "lucide-react";
 
 export const Footer = () => {
   const scrollToTop = () => {
@@ -22,15 +22,13 @@ export const Footer = () => {
   ];
 
   return (
-    <footer className="relative bg-gradient-to-t from-secondary to-background border-t border-border overflow-hidden">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
-
-      <div className="container-custom py-14 px-4 md:px-8">
-        {/* Grille adaptative : 1 col mobile, 2 col tablette (sm), 4 col desktop (lg) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+    <footer className="relative bg-gradient-to-t from-secondary/50 to-background border-t border-border overflow-hidden">
+      <div className="container-custom py-16 px-4 md:px-8">
+        {/* Grille PC optimisée : 4 colonnes bien distribuées */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-16">
           
-          {/* Brand Column */}
-          <div className="flex flex-col gap-4">
+          {/* Bloc Marque - Plus large sur PC */}
+          <div className="flex flex-col gap-5 lg:col-span-1">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 shrink-0">
                 <img 
@@ -39,7 +37,7 @@ export const Footer = () => {
                   className="w-full h-full object-contain" 
                 />
               </div>
-              <span className="font-display text-2xl font-bold text-foreground">
+              <span className="font-display text-2xl font-bold tracking-tight text-foreground">
                 Edu<span className="text-primary">Connect</span>
               </span>
             </div>
@@ -48,15 +46,18 @@ export const Footer = () => {
             </p>
           </div>
 
-          {/* Navigation Column */}
-          <div className="sm:pl-8 lg:pl-0">
-            <h4 className="font-semibold text-foreground mb-6 text-sm uppercase tracking-wider">Navigation</h4>
-            <ul className="space-y-4">
+          {/* Colonne vide pour aérer sur très grands écrans */}
+          <div className="hidden lg:block"></div>
+
+          {/* Navigation - Alignée sur la grille */}
+          <div className="flex flex-col gap-6">
+            <h4 className="font-semibold text-foreground text-sm uppercase tracking-[0.1em]">Navigation</h4>
+            <ul className="grid grid-cols-1 gap-4">
               {navLinks.map((link) => (
                 <li key={link.href}>
                   <a
                     href={link.href}
-                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                    className="text-sm text-muted-foreground hover:text-primary transition-all duration-200 hover:translate-x-1 inline-block"
                   >
                     {link.label}
                   </a>
@@ -65,17 +66,18 @@ export const Footer = () => {
             </ul>
           </div>
 
-          {/* Socials Column - S'étend sur 2 colonnes sur tablette pour rester aligné */}
-          <div className="sm:col-span-2 lg:col-span-1">
-            <h4 className="font-semibold text-foreground mb-6 text-sm uppercase tracking-wider">Suivez-nous</h4>
-            <div className="flex flex-wrap gap-3 items-center">
+          {/* Réseaux Sociaux - Pas de retour à la ligne sur PC */}
+          <div className="flex flex-col gap-6">
+            <h4 className="font-semibold text-foreground text-sm uppercase tracking-[0.1em]">Suivez-nous</h4>
+            <div className="flex flex-wrap lg:flex-nowrap gap-3 items-center">
               {socials.map((social, i) => (
                 <a
                   key={i}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 shrink-0 rounded-xl bg-primary/10 flex items-center justify-center text-primary hover:bg-primary hover:text-primary-foreground hover:scale-110 transition-all duration-300"
+                  className="w-10 h-10 shrink-0 rounded-xl bg-primary/5 border border-primary/10 flex items-center justify-center text-primary hover:bg-primary hover:text-primary-foreground hover:-translate-y-1 transition-all duration-300"
+                  aria-label={`Lien vers ${social.href}`}
                 >
                   {social.icon}
                 </a>
@@ -84,20 +86,21 @@ export const Footer = () => {
           </div>
         </div>
 
-        <div className="h-px bg-border mb-8" />
+        {/* Ligne de séparation fine */}
+        <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent mb-8" />
 
-        {/* Bottom bar */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
-          <p className="text-muted-foreground text-sm text-center sm:text-left">
+        {/* Barre de Copyright */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+          <p className="text-muted-foreground text-xs lg:text-sm tracking-wide">
             © 2026 EduConnect · Tous droits réservés
           </p>
 
           <button
             onClick={scrollToTop}
-            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors group"
+            className="group flex items-center gap-3 text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
           >
-            Retour en haut
-            <div className="w-8 h-8 rounded-full border border-border flex items-center justify-center group-hover:border-primary/50 transition-colors">
+            <span className="hidden sm:inline">Retour en haut</span>
+            <div className="w-9 h-9 rounded-full border border-border group-hover:border-primary/50 flex items-center justify-center transition-all duration-300 group-hover:-translate-y-1">
               <ArrowUp className="w-4 h-4" />
             </div>
           </button>
