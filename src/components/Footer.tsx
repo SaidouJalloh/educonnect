@@ -1,4 +1,4 @@
-import { Heart, ArrowUp, Linkedin } from "lucide-react";
+import { ArrowUp, Linkedin, Heart } from "lucide-react";
 
 export const Footer = () => {
   const scrollToTop = () => {
@@ -26,11 +26,13 @@ export const Footer = () => {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
 
       <div className="container-custom py-14 px-4 md:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
-          {/* Brand - Taille du logo et texte augmentée */}
-          <div>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 flex items-center justify-center overflow-hidden">
+        {/* Grille adaptative : 1 col mobile, 2 col tablette (sm), 4 col desktop (lg) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+          
+          {/* Brand Column */}
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 shrink-0">
                 <img 
                   src="/logo.png" 
                   alt="EduConnect Logo" 
@@ -46,10 +48,10 @@ export const Footer = () => {
             </p>
           </div>
 
-          {/* Navigation */}
-          <div>
-            <h4 className="font-semibold text-foreground mb-4 text-sm uppercase tracking-wider">Navigation</h4>
-            <ul className="space-y-3">
+          {/* Navigation Column */}
+          <div className="sm:pl-8 lg:pl-0">
+            <h4 className="font-semibold text-foreground mb-6 text-sm uppercase tracking-wider">Navigation</h4>
+            <ul className="space-y-4">
               {navLinks.map((link) => (
                 <li key={link.href}>
                   <a
@@ -63,17 +65,17 @@ export const Footer = () => {
             </ul>
           </div>
 
-          {/* Socials */}
-          <div>
-            <h4 className="font-semibold text-foreground mb-4 text-sm uppercase tracking-wider">Suivez-nous</h4>
-            <div className="flex flex-wrap gap-2">
+          {/* Socials Column - S'étend sur 2 colonnes sur tablette pour rester aligné */}
+          <div className="sm:col-span-2 lg:col-span-1">
+            <h4 className="font-semibold text-foreground mb-6 text-sm uppercase tracking-wider">Suivez-nous</h4>
+            <div className="flex flex-wrap gap-3 items-center">
               {socials.map((social, i) => (
                 <a
                   key={i}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary hover:bg-primary hover:text-primary-foreground hover:scale-110 transition-all duration-300"
+                  className="w-10 h-10 shrink-0 rounded-xl bg-primary/10 flex items-center justify-center text-primary hover:bg-primary hover:text-primary-foreground hover:scale-110 transition-all duration-300"
                 >
                   {social.icon}
                 </a>
@@ -82,11 +84,11 @@ export const Footer = () => {
           </div>
         </div>
 
-        <div className="h-px bg-border mb-6" />
+        <div className="h-px bg-border mb-8" />
 
-        {/* Bottom bar - Tous droits réservés */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-muted-foreground text-sm flex items-center gap-1 flex-wrap justify-center">
+        {/* Bottom bar */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+          <p className="text-muted-foreground text-sm text-center sm:text-left">
             © 2026 EduConnect · Tous droits réservés
           </p>
 
@@ -95,8 +97,8 @@ export const Footer = () => {
             className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors group"
           >
             Retour en haut
-            <div className="w-7 h-7 rounded-full border border-border group-hover:border-primary/50 flex items-center justify-center transition-colors">
-              <ArrowUp className="w-3.5 h-3.5" />
+            <div className="w-8 h-8 rounded-full border border-border flex items-center justify-center group-hover:border-primary/50 transition-colors">
+              <ArrowUp className="w-4 h-4" />
             </div>
           </button>
         </div>
