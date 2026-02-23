@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, Rocket, Gift, Lightbulb, CheckCircle, Lock } from "lucide-react";
+import { ArrowRight, Rocket, Gift, Lightbulb, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
-// Tes avatars locaux
 import avatar1 from "@/assets/avatar-1.jpg";
 import avatar2 from "@/assets/avatar-2.jpg";
 import avatar3 from "@/assets/avatar-3.jpg";
@@ -19,7 +18,6 @@ const benefits = [
   { icon: Lightbulb, text: "Influence sur le développement" },
 ];
 
-// Ton URL Google Script pour recevoir les mails
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzb7jBkGwOa6Pkctzd1oy8Sjq7rZ19UNCOt8EMzI1aWdv0FSV2Yal_Euu-rIRhrbhkcYA/exec";
 
 export const WaitlistSection = () => {
@@ -30,7 +28,6 @@ export const WaitlistSection = () => {
   const [position, setPosition] = useState(0);
   const [error, setError] = useState<string | null>(null);
 
-  // Validation de l'email
   const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   useEffect(() => {
@@ -39,6 +36,7 @@ export const WaitlistSection = () => {
       const parsedData = JSON.parse(savedData);
       setPosition(parsedData.position);
       setIsSuccess(true);
+      setEmail(parsedData.email); // Pré-remplit l'email si on veut modifier
     }
   }, []);
 
@@ -47,7 +45,6 @@ export const WaitlistSection = () => {
     setError(null);
     const normalizedEmail = email.trim().toLowerCase();
 
-    // 1. Règles de validation
     if (!validateEmail(normalizedEmail)) {
       setError("Veuillez entrer une adresse email valide.");
       return;
@@ -58,13 +55,12 @@ export const WaitlistSection = () => {
       return;
     }
 
-    // 2. Règle Anti-doublon (Vérification locale)
+    // VERIFICATION ANTI-DOUBLON (Identique à l'ancien code)
     const savedData = localStorage.getItem("educonnect_waitlist");
     if (savedData) {
       const { email: savedEmail } = JSON.parse(savedData);
       if (savedEmail.toLowerCase() === normalizedEmail) {
         setError("Vous êtes déjà inscrit avec cet email !");
-        toast.info("Déjà inscrit !");
         return;
       }
     }
@@ -72,7 +68,6 @@ export const WaitlistSection = () => {
     setIsLoading(true);
 
     try {
-      // 3. Envoi au Google Script (pour recevoir l'email)
       await fetch(GOOGLE_SCRIPT_URL, {
         method: "POST",
         mode: "no-cors",
@@ -80,11 +75,10 @@ export const WaitlistSection = () => {
         body: JSON.stringify({
           email: normalizedEmail,
           timestamp: new Date().toISOString(),
-          source: "waitlist_lovable"
+          source: "react_waitlist"
         }),
       });
 
-      // Gestion de la position
       const lastNumber = parseInt(localStorage.getItem("educonnect_last_position") || "149");
       const newPosition = lastNumber + 1;
 
@@ -106,13 +100,12 @@ export const WaitlistSection = () => {
 
   return (
     <section id="waitlist" className="py-24 bg-primary relative overflow-hidden">
-      {/* Décorations d'arrière-plan */}
       <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-white/5 rounded-full blur-3xl -translate-x-1/4 -translate-y-1/4 animate-pulse" />
       
       <div className="container mx-auto px-6 relative z-10">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           
-          {/* Contenu de gauche */}
+          {/* Gauche : Infos */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -125,11 +118,7 @@ export const WaitlistSection = () => {
             <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
               Rejoins la liste d'attente
             </h2>
-            <p className="text-lg text-white/90 mb-8 max-w-lg">
-              EduConnect arrive bientôt ! Inscris-toi pour tester la plateforme en priorité. Places limitées.
-            </p>
-
-            {/* Social Proof (Avatars locaux) */}
+            
             <div className="rounded-2xl p-4 mb-10 flex items-center gap-4 bg-white shadow-xl border-2 border-primary/20 w-fit">
               <div className="flex -space-x-2">
                 {[avatar1, avatar2, avatar3, avatar4].map((src, i) => (
@@ -143,7 +132,6 @@ export const WaitlistSection = () => {
               </p>
             </div>
 
-            {/* Bénéfices */}
             <div className="space-y-4">
               {benefits.map((benefit, i) => (
                 <div key={i} className="flex items-center gap-4 bg-white/10 p-4 rounded-xl border border-white/10 backdrop-blur-sm">
@@ -154,12 +142,11 @@ export const WaitlistSection = () => {
             </div>
           </motion.div>
 
-          {/* Formulaire de Droite */}
+          {/* Droite : Formulaire */}
           <div className="relative">
             {!isSuccess ? (
               <form onSubmit={handleSubmit} className="bg-white rounded-[2.5rem] p-8 md:p-10 shadow-2xl border-2 border-white/50">
-                <h3 className="text-2xl font-bold text-slate-900 mb-2">Teste EduConnect</h3>
-                <p className="text-slate-500 mb-8">Réserve ta place en 10 secondes</p>
+                <p className="text-slate-400 font-medium mb-8">Réserve ta place en 10 secondes</p>
 
                 <div className="space-y-6">
                   <div className="relative">
@@ -175,15 +162,26 @@ export const WaitlistSection = () => {
                         "h-14 rounded-2xl border-2 px-6 text-lg transition-all text-slate-900",
                         error ? "border-red-500 bg-red-50" : "border-slate-100 focus:border-primary"
                       )}
-                      required
                     />
-                    {error && <p className="text-red-500 text-xs mt-2 font-medium">⚠️ {error}</p>}
+                    
+                    <AnimatePresence>
+                      {error && (
+                        <motion.div 
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="flex items-center gap-2 mt-3 text-red-500 font-medium text-sm"
+                        >
+                          <span className="text-base">⚠️</span>
+                          <span>{error}</span>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
 
                   <div className="flex items-start gap-3">
                     <Checkbox id="consent" checked={consent} onCheckedChange={(c) => setConsent(c as boolean)} className="mt-1" />
                     <label htmlFor="consent" className="text-sm text-slate-500 leading-snug cursor-pointer">
-                      J'accepte de recevoir des nouvelles d'EduConnect.
+                      J'accepte de recevoir des informations sur EduConnect.
                     </label>
                   </div>
 
@@ -203,7 +201,12 @@ export const WaitlistSection = () => {
                   <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Ta place</p>
                   <span className="text-6xl font-black text-primary">#{position}</span>
                 </div>
-                <button onClick={() => { localStorage.removeItem("educonnect_waitlist"); setIsSuccess(false); }} className="text-slate-400 hover:text-primary underline">
+                {/* MODIFICATION ICI : On ne supprime plus le localStorage, on change juste l'état visuel */}
+                <button 
+                  type="button"
+                  onClick={() => setIsSuccess(false)} 
+                  className="text-slate-400 hover:text-primary underline"
+                >
                   Modifier mon inscription
                 </button>
               </motion.div>
